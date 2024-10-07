@@ -3,9 +3,8 @@ from flask import Flask, request, jsonify, redirect, session
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)  # Replace this with a secure key in production
-# Configuration for SAML
-SAML_PATH = os.path.join(os.getcwd(), 'saml')
+app.config["SECRET_KEY"] = "onelogindemopytoolkit"
+app.config["SAML_PATH"] = os.path.join(os.path.dirname(os.path.abspath(__file__)), "saml")
 
 @app.route('/')
 def say_hi():
@@ -13,7 +12,7 @@ def say_hi():
 
 def init_saml_auth(req):
     print('In init auth')
-    auth = OneLogin_Saml2_Auth(req, custom_base_path=SAML_PATH)
+    auth = OneLogin_Saml2_Auth(req, custom_base_path=app.config["SAML_PATH"])
     return auth
 
 def prepare_flask_request(request):
@@ -42,6 +41,7 @@ def login_callback():
     print('request------->',req)
     auth = init_saml_auth(req)
     auth.process_response()
+    print('AAUuuuuuuuthhhh->',auth)
     errors = auth.get_errors()
 
     if not errors:
