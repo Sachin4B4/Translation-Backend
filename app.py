@@ -39,6 +39,7 @@ def login():
 @app.route('/saml/callback', methods=['POST'])
 def login_callback():
     req = prepare_flask_request(request)
+    print('request------->',req)
     auth = init_saml_auth(req)
     auth.process_response()
     errors = auth.get_errors()
