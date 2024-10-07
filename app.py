@@ -20,7 +20,7 @@ def prepare_flask_request(request):
     print('In Prepare Flask')
     url_data = request.url.split('?')
     return {
-        'https': 'on' if request.scheme == 'https' else 'off',
+        'https': 'on', #if request.scheme == 'https' else 'off',
         'http_host': request.host,
         'script_name': request.path,
         'server_port': request.host.split(':')[1] if ':' in request.host else '80',
