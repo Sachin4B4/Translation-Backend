@@ -41,7 +41,9 @@ def login_callback():
     print('request------->',req)
     auth = init_saml_auth(req)
     auth.process_response()
-    print('AAUuuuuuuuthhhh->',auth)
+    print('AAUuuuuuuuthhhh->',auth.get_attributes())
+    print('Dict-----------')
+    print(auth.__dict__)
     errors = auth.get_errors()
 
     if not errors:
