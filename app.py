@@ -36,6 +36,23 @@ def login():
     auth = init_saml_auth(req)
     return redirect(auth.login())
 
+@app.route('/saml/callback', methods=['POST'])
+def login_callback():
+    req = prepare_flask_request(request)
+    auth = init_saml_auth(req)
+    auth.process_response()
+    errors = auth.get_errors()
+
+    if not errors:
+        session['samlUserdata'] = auth.get_attributes()
+        session['samlNameId'] = auth.get_nameid()
+        print(session['samlUserdata'])
+        name_ = session['samlUserdata']['http://schemas.microsoft.com/identity/claims/displayname']
+        #return redirect(url_for('index'))
+        return f"{name_} User authenticated!"
+    else:
+        return f"Error in SAML Authentication: {errors}", 500
+        
 if __name__ == '__main__':
     # Use the environment variable PORT, or default to port 5000 if not set
     port = int(os.environ.get('PORT', 5000))
