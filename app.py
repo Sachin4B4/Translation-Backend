@@ -12,10 +12,12 @@ def say_hi():
     return 'Hi! This is the addition service.'
 
 def init_saml_auth(req):
+    print('In init auth')
     auth = OneLogin_Saml2_Auth(req, custom_base_path=SAML_PATH)
     return auth
 
 def prepare_flask_request(request):
+    print('In Prepare Flask')
     url_data = request.url.split('?')
     return {
         'https': 'on' if request.scheme == 'https' else 'off',
@@ -29,6 +31,7 @@ def prepare_flask_request(request):
 
 @app.route('/saml/login')
 def login():
+    print('In SAML Login')
     req = prepare_flask_request(request)
     auth = init_saml_auth(req)
     return redirect(auth.login())
