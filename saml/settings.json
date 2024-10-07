@@ -1,8 +1,8 @@
 {
   "sp": {
-    "entityId": "http://127.0.0.1:5000/saml/callback",
+    "entityId": "https://auth-gdhphdgegzgmbxav.centralindia-01.azurewebsites.net/saml/callback",
     "assertionConsumerService": {
-      "url": "http://127.0.0.1:5000/saml/callback",
+      "url": "https://auth-gdhphdgegzgmbxav.centralindia-01.azurewebsites.net/saml/callback",
       "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
     },
     "singleLogoutService": {
