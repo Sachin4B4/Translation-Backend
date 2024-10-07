@@ -23,7 +23,7 @@ def prepare_flask_request(request):
         'https': 'on', #if request.scheme == 'https' else 'off',
         'http_host': request.host,
         'script_name': request.path,
-        'server_port': '5000', #request.host.split(':')[1] if ':' in request.host else '80',
+        'server_port': 5000, #request.host.split(':')[1] if ':' in request.host else '80',
         'get_data': request.args.copy(),
         'post_data': request.form.copy(),
     }
