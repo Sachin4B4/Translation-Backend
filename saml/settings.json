@@ -2,7 +2,7 @@
   "sp": {
     "entityId": "Test-Auth-App",
     "assertionConsumerService": {
-      "url": "https://auth-gdhphdgegzgmbxav.centralindia-01.azurewebsites.net/saml/callback",
+      "url": "https://devaiwebfunctions-evaffrf2behvf8hf.eastus2-01.azurewebsites.net/saml/callback",
       "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
     },
     "singleLogoutService": {
