@@ -51,8 +51,7 @@ def login_callback():
         session['samlNameId'] = auth.get_nameid()
         print(session['samlUserdata'])
         user_data = {
-        'name' : session['samlUserdata']['http://schemas.microsoft.com/identity/claims/displayname'],
-        'email' : session['samlUserdata']['http://schemas.microsoft.com/identity/claims/emailaddress']
+        'name' : session['samlUserdata']['http://schemas.microsoft.com/identity/claims/displayname']
         }
         #return redirect(url_for('index'))
         return jsonify(user_data), 200
