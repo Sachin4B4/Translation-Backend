@@ -53,8 +53,15 @@ def login_callback():
         user_data = {
         'name' : session['samlUserdata']['http://schemas.microsoft.com/identity/claims/displayname']
         }
+    
         #return redirect(url_for('index'))
-        return jsonify(user_data), 200
+        #return jsonify(user_data), 200
+     # Convert user_data to a query string
+        query_string = urllib.parse.urlencode(user_data)
+        # Redirect to the React dashboard with user data
+        return redirect(f'http://localhost:3000/dashboard?{query_string}')
+    else:
+        return f"Error in SAML Authentication: {errors}", 500
     else:
         return f"Error in SAML Authentication: {errors}", 500
         
