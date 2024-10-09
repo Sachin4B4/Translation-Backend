@@ -50,9 +50,12 @@ def login_callback():
         session['samlUserdata'] = auth.get_attributes()
         session['samlNameId'] = auth.get_nameid()
         print(session['samlUserdata'])
-        name_ = session['samlUserdata']['http://schemas.microsoft.com/identity/claims/displayname']
+        user_data = {
+        'name' : session['samlUserdata']['http://schemas.microsoft.com/identity/claims/displayname'],
+        'email' : session['samlUserdata']['http://schemas.microsoft.com/identity/claims/emailaddress']
+        }
         #return redirect(url_for('index'))
-        return f"{name_} User authenticated!"
+        return jsonify(user_data), 200
     else:
         return f"Error in SAML Authentication: {errors}", 500
         
