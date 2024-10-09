@@ -63,8 +63,6 @@ def login_callback():
         return redirect(f'http://localhost:3000/dashboard?{query_string}')
     else:
         return f"Error in SAML Authentication: {errors}", 500
-    else:
-        return f"Error in SAML Authentication: {errors}", 500
         
 if __name__ == '__main__':
     # Use the environment variable PORT, or default to port 5000 if not set
