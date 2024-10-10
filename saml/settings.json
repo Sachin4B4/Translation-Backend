@@ -2,7 +2,7 @@
   "sp": {
     "entityId": "https://jolly-sea-03e4a990f.5.azurestaticapps.net/meta",
     "assertionConsumerService": {
-      "url": "https://jolly-sea-03e4a990f.5.azurestaticapps.net/auth",
+      "url": "https://devaiwebfunctions-evaffrf2behvf8hf.eastus2-01.azurewebsites.net/saml/callback",
       "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
     },
     "singleLogoutService": {
