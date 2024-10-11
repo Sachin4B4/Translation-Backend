@@ -609,7 +609,7 @@ def validate_connection_string_route():
         return jsonify({"success": True, "message": "Valid Azure Blob Storage connection string."}), 200
     else:
         return jsonify({"error": "Invalid Azure Blob Storage connection string."}), 400
-
+        
 @app.route('/run_all_operations', methods=['POST'])
 def run_all_operations():
     # Get the inputs from form-data
