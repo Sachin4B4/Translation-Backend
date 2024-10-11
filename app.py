@@ -130,15 +130,22 @@ def login_callback():
     print('Dict-----------')
     print(auth.__dict__)
     errors = auth.get_errors()
-
+    group = None
     if not errors:
         session['samlUserdata'] = auth.get_attributes()
         session['samlNameId'] = auth.get_nameid()
         print(session['samlUserdata'])
         groups = session['samlUserdata']['http://schemas.microsoft.com/identity/claims/groups']
         print('Groups -->',groups)
+        if admin in groups:
+            group = 'admin'
+        elif users in groups:
+            group = 'user
+        else:
+            group = 'member'
         user_data = {
-        'name' : session['samlUserdata']['http://schemas.microsoft.com/identity/claims/displayname']
+        'name' : session['samlUserdata']['http://schemas.microsoft.com/identity/claims/displayname'],
+         'group' : group
         }
     
         #return redirect(url_for('index'))
