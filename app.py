@@ -845,14 +845,16 @@ def translate_files():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
-
-
-
+DEEPL_API_KEY = '82a64fae-73d4-4739-9935-bbf3cfc15010'
 
 @app.route('/download_translated_file', methods=['POST'])
 def download_translated_document():
+    print("Received request at /download_translated_file")  # Debugging print statement
+    
     data = request.json
+    if not data:
+        return jsonify({"error": "No JSON payload received"}), 400
+
     download_url = data.get('download_url')
     document_key = data.get('document_key')
 
@@ -860,7 +862,10 @@ def download_translated_document():
         return jsonify({"error": "Missing document URL or document key"}), 400
 
     # Extract document_id from the download URL
-    document_id = download_url.split('/v2/document/')[1].split('/result')[0]
+    try:
+        document_id = download_url.split('/v2/document/')[1].split('/result')[0]
+    except IndexError:
+        return jsonify({"error": "Invalid download URL format"}), 400
 
     # Prepare the headers for the POST request
     headers = {
@@ -879,7 +884,12 @@ def download_translated_document():
 
     # If request fails, return the error
     if response.status_code != 200:
+        print(f"Error downloading document: {response.text}")  # Debugging print statement
         return jsonify({"error": f"Failed to download the document. Status code: {response.status_code}"}), response.status_code
+
+    # Create downloads directory if it doesn't exist
+    if not os.path.exists('downloads'):
+        os.makedirs('downloads')
 
     # Save the downloaded document
     document_name = f'translated_document_{document_id}.txt'
@@ -888,14 +898,8 @@ def download_translated_document():
     with open(document_path, 'wb') as f:
         f.write(response.content)
 
-    # Send the file to the user for download
-    return send_file(document_path, as_attachment=True)
+    print(f"Document saved as {document_path}")  # Debugging print statement
 
-if __name__ == '__main__':
-    # Create the 'downloads' directory if it doesn't exist
-    if not os.path.exists('downloads'):
-        os.makedirs('downloads')
-    app.run(debug=True)
 
 
 
