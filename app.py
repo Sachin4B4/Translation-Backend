@@ -72,6 +72,13 @@ language_mapping = {
     "Chinese (Traditional)": "ZH-HANT"
 }
 
+
+
+# Supported languages for formality
+formality_supported_languages = {"DE", "FR", "IT", "ES", "NL", "PL", "PT-BR", "PT-PT", "JA", "RU"}
+
+
+
 app.config["SECRET_KEY"] = "onelogindemopytoolkit"
 app.config["SAML_PATH"] = os.path.join(os.path.dirname(os.path.abspath(__file__)), "saml")
 
