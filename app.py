@@ -140,7 +140,7 @@ def login_callback():
         if admin in groups:
             group = 'admin'
         elif users in groups:
-            group = 'user
+            group = 'user'
         else:
             group = 'member'
         user_data = {
