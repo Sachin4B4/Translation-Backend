@@ -145,13 +145,13 @@ def translate_text(text, target_lang_name, source_lang_name=None, formality='def
         raise ValueError(f"Invalid target language: '{target_lang_name}'. Please provide a valid language name.")
 
     try:
-        # Perform the translation
+        # Perform the translation, hardcoding preserve_formatting to True
         result = translator.translate_text(
             text,
             source_lang=source_lang,
             target_lang=target_lang,
             formality=formality,
-            preserve_formatting=preserve_formatting
+            preserve_formatting=True  # Always true
         )
 
         # Return the translated text
@@ -159,6 +159,7 @@ def translate_text(text, target_lang_name, source_lang_name=None, formality='def
 
     except Exception as e:
         raise RuntimeError(f"Translation failed: {str(e)}")
+
 
 def store_feedback(user_id, feedback_text, source_language, target_language, 
                    document_name=None, source_text=None, translated_text=None):
@@ -345,16 +346,18 @@ def translate():
     if not text or not target_language:
         return jsonify({'error': 'Please provide text and target_language'}), 400
 
-    # Optional formality and formatting preservation flags
-    formality = data.get('formality', 'prefer_more')
-    preserve_formatting = data.get('preserve_formatting', True)
+    # Get the formality parameter from the request, default to 'default' if not provided
+    formality = data.get('formality', 'default')
 
     try:
-        # Perform translation
-        translated_text = translate_text(text, target_language, source_language, formality, preserve_formatting)
+        # Perform translation, hardcoding preserve_formatting to True
+        translated_text = translate_text(text, target_language, source_language, formality)
         return jsonify({'translated_text': translated_text})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+
 
 @app.route('/document-translate', methods=['POST'])
 def document_translate():
