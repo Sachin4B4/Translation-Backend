@@ -129,26 +129,15 @@ def login_callback():
     auth.process_response()
     print('AAUuuuuuuuthhhh->',auth.get_attributes())
     print('Dict-----------')
-    print(auth.__dict__)
+    print(auth._dict_)
     errors = auth.get_errors()
-    group = None
+
     if not errors:
         session['samlUserdata'] = auth.get_attributes()
         session['samlNameId'] = auth.get_nameid()
         print(session['samlUserdata'])
-        '''
-        groups = session['samlUserdata']['http://schemas.microsoft.com/identity/claims/groups']
-        print('Groups -->',groups)
-        if admin in groups:
-            group = 'admin'
-        elif users in groups:
-            group = 'user'
-        else:
-            group = 'member'
-        '''
         user_data = {
         'name' : session['samlUserdata']['http://schemas.microsoft.com/identity/claims/displayname']
-         #'group' : group
         }
     
         #return redirect(url_for('index'))
@@ -157,8 +146,6 @@ def login_callback():
         query_string = urllib.parse.urlencode(user_data)
         # Redirect to the React dashboard with user data
         return redirect(f'https://jolly-sea-03e4a990f.5.azurestaticapps.net/dashboard?{query_string}')
-    else:
-        return f"Error in SAML Authentication: {errors}", 500
     
 def translate_text(text, target_lang_name, source_lang_name=None, formality='default', preserve_formatting=True):
     # Validate required parameters
