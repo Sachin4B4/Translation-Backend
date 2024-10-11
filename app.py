@@ -751,6 +751,7 @@ def translate_files():
         files = request.files.getlist('file')  # The list of uploaded files
         source_lang = request.form.get('source_lang', 'auto')  # Default to auto-detect if not provided
         target_lang = request.form['target_lang']  # Target language
+        formality = request.form['formality']  # Mandatory formality parameter
 
         # Convert human-readable language names to language codes
         source_lang_code = language_mapping.get(source_lang, 'auto')  # Use 'auto' for detection if not in mapping
@@ -758,6 +759,12 @@ def translate_files():
 
         if not target_lang_code:
             return jsonify({"error": "Invalid target language"}), 400
+
+        # Check if the formality parameter is used with an unsupported language
+        if target_lang_code not in formality_supported_languages and formality in ['more', 'less']:
+            return jsonify({
+                "error": f"Formality '{formality}' is not supported for the target language '{target_lang}'."
+            }), 400
 
         download_urls = []  # To store file names and download URLs
 
@@ -767,7 +774,8 @@ def translate_files():
             file_payload = {
                 'file': (file.filename, file.stream, file.content_type),
                 'target_lang': (None, target_lang_code),
-                'source_lang': (None, source_lang_code if source_lang_code != 'auto' else None)
+                'source_lang': (None, source_lang_code if source_lang_code != 'auto' else None),
+                'formality': (None, formality)
             }
 
             headers = {
@@ -797,9 +805,9 @@ def translate_files():
             if status != 'done':
                 return jsonify({"error": f"Translation failed for {file.filename}"}), 500
 
-            # 3. Instead of downloading the file, get the URL for download
+            # 3. Get the URL for download
             download_url = f"{DEEPL_API_URL}/{document_id}/result"
-            
+
             # Append the file name and corresponding download URL to the list
             download_urls.append({
                 'file_name': file.filename,
@@ -815,7 +823,6 @@ def translate_files():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 
 
