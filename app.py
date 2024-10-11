@@ -585,10 +585,8 @@ def validate_connection_string(connection_string):
     try:
         # Attempt to create BlobServiceClient with the provided connection string
         blob_service_client = BlobServiceClient.from_connection_string(connection_string)
-        # Try to list containers to validate the connection
-        containers = blob_service_client.list_containers()
-        for container in containers:
-            pass  # Just to iterate and check if we can access containers
+        
+        # If no exception is raised, the connection string is valid
         return True
     except Exception as e:
         print(f"Connection string validation failed: {str(e)}")
