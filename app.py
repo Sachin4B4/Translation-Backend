@@ -130,7 +130,7 @@ def login_callback():
     auth.process_response()
     print('AAUuuuuuuuthhhh->',auth.get_attributes())
     print('Dict-----------')
-    print(auth._dict_)
+    print(auth.__dict__)
     errors = auth.get_errors()
 
     if not errors:
@@ -147,6 +147,8 @@ def login_callback():
         query_string = urllib.parse.urlencode(user_data)
         # Redirect to the React dashboard with user data
         return redirect(f'https://jolly-sea-03e4a990f.5.azurestaticapps.net/dashboard?{query_string}')
+    else:
+        return f"Error in SAML Authentication: {errors}", 500
     
 def translate_text(text, target_lang_name, source_lang_name=None, formality='default', preserve_formatting=True):
     # Validate required parameters
