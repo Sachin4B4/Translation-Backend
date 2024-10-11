@@ -7,6 +7,7 @@ from flask import Flask, request, jsonify, send_file, redirect, session
 import json
 from azure.storage.blob import BlobServiceClient
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
+import urllib.parse
 
 
 
