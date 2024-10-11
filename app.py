@@ -589,6 +589,84 @@ def validate_connection_string_route():
     else:
         return jsonify({"error": "Invalid Azure Blob Storage connection string."}), 400
 
+@app.route('/run_all_operations', methods=['POST'])
+def run_all_operations():
+    # Get the inputs from form-data
+    key = request.form.get('key')  # Azure Translator API key
+    text_translation_endpoint = request.form.get('text_translation_endpoint')  # Text translation service endpoint URL
+    document_translation_endpoint = request.form.get('document_translation_endpoint')  # Document translation endpoint URL
+    region = request.form.get('region')  # Azure region
+
+    # Validate key, endpoints, and region
+    if not key or not text_translation_endpoint or not document_translation_endpoint or not region:
+        return jsonify({
+            "error": "API key, text translation endpoint, document translation endpoint, and region are required."
+        }), 400
+
+    # Initialize results
+    results = {}
+    all_successful = True  # Flag to check if all operations are successful
+
+    # Step 1: Test Text Translation
+    try:
+        source_language_code = "en"  # English as source language
+        target_language_code = "es"  # Spanish as target language
+        text_to_translate = "This is a test"
+
+        # Construct the Azure Text Translator API URL
+        constructed_url = f"{text_translation_endpoint}/translate"
+        params = {'api-version': '3.0', 'from': source_language_code, 'to': target_language_code}
+        headers = {
+            'Ocp-Apim-Subscription-Key': key,
+            'Ocp-Apim-Subscription-Region': region,
+            'Content-Type': 'application/json'
+        }
+        body = [{'text': text_to_translate}]
+        
+        # Make the request to the Text Translation API
+        translation_response = requests.post(constructed_url, params=params, headers=headers, json=body)
+        translation_response.raise_for_status()  # Raise exception for bad status codes
+
+        # Add text translation result to the results dictionary
+        results['text_translation'] = translation_response.json()
+    except Exception as e:
+        results['text_translation'] = {"error": str(e)}
+        all_successful = False  # Set flag to False if there was an error
+
+    # Step 2: Test Document Translation
+    try:
+        # Construct the Azure Document Translation API URL
+        document_translation_url = f"{document_translation_endpoint}/translator/text/batch/v1.0/batches"
+        body = {
+            "inputs": [
+                {
+                    "source": {"sourceUrl": SOURCE_DOCUMENT_URL, "language": SOURCE_LANGUAGE_CODE},
+                    "targets": [{"targetUrl": TARGET_DOCUMENT_URL, "language": TARGET_LANGUAGE_CODE}]
+                }
+            ]
+        }
+        headers = {
+            'Ocp-Apim-Subscription-Key': key,
+            'Ocp-Apim-Subscription-Region': region,
+            'Content-Type': 'application/json'
+        }
+        
+        # Make the request to the Document Translation API
+        document_response = requests.post(document_translation_url, headers=headers, json=body)
+        document_response.raise_for_status()  # Raise exception for bad status codes
+
+        # Add document translation result to the results dictionary
+        results['document_translation'] = {"message": "Document translation started successfully."}
+    except Exception as e:
+        results['document_translation'] = {"error": str(e)}
+        all_successful = False  # Set flag to False if there was an error
+
+    # Determine the status code based on the success of operations
+    if all_successful:
+        return jsonify(results), 200
+    else:
+        return jsonify(results), 500  # Return 500 if any operation failed
+
 
 
 
