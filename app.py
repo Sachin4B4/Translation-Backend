@@ -850,6 +850,60 @@ def translate_files():
 
 
 
+@app.route('/download_translated_file', methods=['POST'])
+def download_translated_document():
+    data = request.json
+    download_url = data.get('download_url')
+    document_key = data.get('document_key')
+
+    if not download_url or not document_key:
+        return jsonify({"error": "Missing document URL or document key"}), 400
+
+    # Extract document_id from the download URL
+    document_id = download_url.split('/v2/document/')[1].split('/result')[0]
+
+    # Prepare the headers for the POST request
+    headers = {
+        "Authorization": f"DeepL-Auth-Key {DEEPL_API_KEY}",
+        "User-Agent": "YourApp/1.0",
+        "Content-Type": "application/json"
+    }
+
+    # Prepare the payload with the document_key
+    payload = {
+        "document_key": document_key
+    }
+
+    # Send the POST request to DeepL API to download the translated document
+    response = requests.post(f'https://api.deepl.com/v2/document/{document_id}/result', headers=headers, json=payload)
+
+    # If request fails, return the error
+    if response.status_code != 200:
+        return jsonify({"error": f"Failed to download the document. Status code: {response.status_code}"}), response.status_code
+
+    # Save the downloaded document
+    document_name = f'translated_document_{document_id}.txt'
+    document_path = os.path.join('downloads', document_name)
+    
+    with open(document_path, 'wb') as f:
+        f.write(response.content)
+
+    # Send the file to the user for download
+    return send_file(document_path, as_attachment=True)
+
+if __name__ == '__main__':
+    # Create the 'downloads' directory if it doesn't exist
+    if not os.path.exists('downloads'):
+        os.makedirs('downloads')
+    app.run(debug=True)
+
+
+
+
+
+
+
+
 
 
     
