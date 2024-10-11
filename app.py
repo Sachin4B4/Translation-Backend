@@ -81,13 +81,13 @@ formality_supported_languages = {"DE", "FR", "IT", "ES", "NL", "PL", "PT-BR", "P
 
 
 #gr_Allegis_AllegisGroup_Language_Translation_Admin
-admin = '0062ed05-04f6-467f-b14e-b7fe66fc9c7b'
+#admin = '0062ed05-04f6-467f-b14e-b7fe66fc9c7b'
  
 #gr_Allegis_AllegisGroup_Language_Translation_Users
-users = '3b50bdf4-fcc7-403b-9428-9923b4dfeb4a'
+#users = '3b50bdf4-fcc7-403b-9428-9923b4dfeb4a'
  
 #gr_az_AllegisGroup_Vectoriq.ai__Members
-members = '66ff0b0f-76c1-4c8c-b739-02b94b035375'
+#members = '66ff0b0f-76c1-4c8c-b739-02b94b035375'
 
 app.config["SECRET_KEY"] = "onelogindemopytoolkit"
 app.config["SAML_PATH"] = os.path.join(os.path.dirname(os.path.abspath(__file__)), "saml")
@@ -136,6 +136,7 @@ def login_callback():
         session['samlUserdata'] = auth.get_attributes()
         session['samlNameId'] = auth.get_nameid()
         print(session['samlUserdata'])
+        '''
         groups = session['samlUserdata']['http://schemas.microsoft.com/identity/claims/groups']
         print('Groups -->',groups)
         if admin in groups:
@@ -144,9 +145,10 @@ def login_callback():
             group = 'user'
         else:
             group = 'member'
+        '''
         user_data = {
-        'name' : session['samlUserdata']['http://schemas.microsoft.com/identity/claims/displayname'],
-         'group' : group
+        'name' : session['samlUserdata']['http://schemas.microsoft.com/identity/claims/displayname']
+         #'group' : group
         }
     
         #return redirect(url_for('index'))
