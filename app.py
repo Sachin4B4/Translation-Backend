@@ -310,14 +310,6 @@ def test_api_key(auth_key):
 
 
 
-
-
-
-
-@app.route('/')
-def say_hi():
-    return 'Hi! This is a service that offers both addition and translation. Use /add for addition and /translate for translation.'
-
 @app.route('/add', methods=['POST'])
 def add_numbers():
     # Get JSON data from the request
