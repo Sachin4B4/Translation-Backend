@@ -11,6 +11,7 @@ from azure.storage.blob import BlobServiceClient
 
 app = Flask(__name__)
 
+
 # DeepL API key
 DEEPL_API_KEY = '82a64fae-73d4-4739-9935-bbf3cfc15010'
 
@@ -78,6 +79,14 @@ language_mapping = {
 formality_supported_languages = {"DE", "FR", "IT", "ES", "NL", "PL", "PT-BR", "PT-PT", "JA", "RU"}
 
 
+#gr_Allegis_AllegisGroup_Language_Translation_Admin
+admin = '0062ed05-04f6-467f-b14e-b7fe66fc9c7b'
+ 
+#gr_Allegis_AllegisGroup_Language_Translation_Users
+users = '3b50bdf4-fcc7-403b-9428-9923b4dfeb4a'
+ 
+#gr_az_AllegisGroup_Vectoriq.ai__Members
+members = '66ff0b0f-76c1-4c8c-b739-02b94b035375'
 
 app.config["SECRET_KEY"] = "onelogindemopytoolkit"
 app.config["SAML_PATH"] = os.path.join(os.path.dirname(os.path.abspath(__file__)), "saml")
@@ -126,6 +135,8 @@ def login_callback():
         session['samlUserdata'] = auth.get_attributes()
         session['samlNameId'] = auth.get_nameid()
         print(session['samlUserdata'])
+        groups = session['samlUserdata']['http://schemas.microsoft.com/identity/claims/groups']
+        print('Groups -->',groups)
         user_data = {
         'name' : session['samlUserdata']['http://schemas.microsoft.com/identity/claims/displayname']
         }
