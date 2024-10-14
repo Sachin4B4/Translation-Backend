@@ -138,7 +138,8 @@ def login_callback():
         session['samlNameId'] = auth.get_nameid()
         print(session['samlUserdata'])
         user_data = {
-        'name' : session['samlUserdata']['http://schemas.microsoft.com/identity/claims/displayname']
+        'name' : session['samlUserdata']['http://schemas.microsoft.com/identity/claims/displayname'],
+         'group' : 'user'
         }
         # Open a file in write mode
         with open("session_data.txt", "w") as file:
