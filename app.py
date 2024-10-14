@@ -82,7 +82,7 @@ formality_supported_languages = {"DE", "FR", "IT", "ES", "NL", "PL", "PT-BR", "P
 
 
 #gr_Allegis_AllegisGroup_Language_Translation_Admin
-#admin = '0062ed05-04f6-467f-b14e-b7fe66fc9c7b'
+admin_group_id = '0062ed05-04f6-467f-b14e-b7fe66fc9c7b'
  
 #gr_Allegis_AllegisGroup_Language_Translation_Users
 #users = '3b50bdf4-fcc7-403b-9428-9923b4dfeb4a'
@@ -132,14 +132,19 @@ def login_callback():
     print('Dict-----------')
     print(auth.__dict__)
     errors = auth.get_errors()
-
+    group_name = 'user'
     if not errors:
         session['samlUserdata'] = auth.get_attributes()
         session['samlNameId'] = auth.get_nameid()
         print(session['samlUserdata'])
+        json_data = session['samlUserdata']
+        groups = json_data.get("http://schemas.microsoft.com/ws/2008/06/identity/claims/groups", [])
+    # If the admin group ID is present, return "admin", otherwise return "user"
+        if admin_group_id in groups:
+            group_name = 'admin'
         user_data = {
         'name' : session['samlUserdata']['http://schemas.microsoft.com/identity/claims/displayname'],
-         'group' : 'user'
+         'group' : group_name
         }
         # Open a file in write mode
         with open("session_data.txt", "w") as file:
