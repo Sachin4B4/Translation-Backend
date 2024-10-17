@@ -924,9 +924,8 @@ from flask import Flask, jsonify
 import datetime
 import logging
 from azure.storage.blob import BlobServiceClient
-# Hardcoded connection string for Azure Blob Storage
-connection_string = "DefaultEndpointsProtocol=https;AccountName=devaitranslationstorage;AccountKey=GtiG/Hm1kzpGy8aElsdqgBiApPvUgEg+8DbylzCUYV+f4ZCfsNFRCLLIsfrvPemzXqm5hnIw6VGA+AStpe8FWQ==;EndpointSuffix=core.windows.net"
-
+# Retrieve the connection string from environment variables
+connection_string = os.getenv("STORAGE_CONNECTION_STRING")
 def get_container_timestamp(container_name):
     # Extract timestamp from container name, assuming format 'source-YYYYMMDDHHMMSS'
     try:
