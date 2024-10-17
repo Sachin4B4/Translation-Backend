@@ -341,16 +341,6 @@ def test_api_key(auth_key):
 
 
 
-# Retrieve the connection string from environment variables
-connection_string = "DefaultEndpointsProtocol=https;AccountName=devaitranslationstorage;AccountKey=GtiG/Hm1kzpGy8aElsdqgBiApPvUgEg+8DbylzCUYV+f4ZCfsNFRCLLIsfrvPemzXqm5hnIw6VGA+AStpe8FWQ==;EndpointSuffix=core.windows.net"
-def get_container_timestamp(container_name):
-    # Extract timestamp from container name, assuming format 'source-YYYYMMDDHHMMSS'
-    try:
-        timestamp_str = container_name.split('-')[-1]
-        return datetime.datetime.strptime(timestamp_str, '%Y%m%d%H%M%S')
-    except ValueError:
-        return None
-
 
 
 
@@ -930,6 +920,20 @@ def download_translated_document():
 
 
 
+from flask import Flask, jsonify
+import datetime
+import logging
+from azure.storage.blob import BlobServiceClient
+# Hardcoded connection string for Azure Blob Storage
+connection_string = "DefaultEndpointsProtocol=https;AccountName=devaitranslationstorage;AccountKey=GtiG/Hm1kzpGy8aElsdqgBiApPvUgEg+8DbylzCUYV+f4ZCfsNFRCLLIsfrvPemzXqm5hnIw6VGA+AStpe8FWQ==;EndpointSuffix=core.windows.net"
+
+def get_container_timestamp(container_name):
+    # Extract timestamp from container name, assuming format 'source-YYYYMMDDHHMMSS'
+    try:
+        timestamp_str = container_name.split('-')[-1]
+        return datetime.datetime.strptime(timestamp_str, '%Y%m%d%H%M%S')
+    except ValueError:
+        return None
 
 @app.route('/delete_old_containers', methods=['POST'])
 def delete_old_containers():
