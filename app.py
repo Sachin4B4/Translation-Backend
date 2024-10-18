@@ -834,21 +834,51 @@ def translate_files():
             check_status_url = f"{DEEPL_API_URL}/{document_id}"
             status_payload = {"document_key": document_key}
 
+            max_retries = 20  # Set a maximum number of retries
+            retry_count = 0
             status = 'translating'
-            while status == 'translating':
+
+            while status == 'translating' and retry_count < max_retries:
+                time.sleep(10)  # Wait for 5 seconds before the next check
                 status_response = requests.post(check_status_url, json=status_payload, headers=headers)
                 status_data = status_response.json()
                 status = status_data['status']
 
+
+                # Log the response for debugging
+                print(f"Status check response for {file.filename}: {status_data}")
+
+                if status == 'done':
+                    break
+                elif status == 'failed':
+                    error_message = status_data.get('error', 'Unknown error occurred')
+                    return jsonify({
+                        "error": f"Translation failed for {file.filename}",
+                        "status_details": status_data,
+                        "error_message": error_message
+                    }), 500
+
+                retry_count += 1
+
             if status != 'done':
-                return jsonify({"error": f"Translation failed for {file.filename}"}), 500
+                return jsonify({
+                    "error": f"Translation still in progress for {file.filename} after maximum retries.",
+                    "status_details": status_data
+                }), 500
 
             # 3. Get the URL for download
             download_url = f"{DEEPL_API_URL}/{document_id}/result"
 
-            # Append the file name and corresponding download URL to the list
+            # Extract the original file name and its extension
+            original_file_name = file.filename
+            file_name_base, file_extension = original_file_name.rsplit('.', 1)
+
+            # Create new file name with the language code
+            new_file_name = f"{file_name_base}-{target_lang_code.lower()}.{file_extension}"
+
+            # Append the new file name and corresponding download URL to the list
             download_urls.append({
-                'file_name': file.filename,
+                'file_name': new_file_name,  # Updated file name with language code
                 'download_url': download_url,
                 'document_key': document_key  # document_key needed for accessing the result later
             })
