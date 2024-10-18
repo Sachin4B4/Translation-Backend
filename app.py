@@ -170,8 +170,8 @@ def login_callback():
         # Open a file in write mode
         with open("session_data.txt", "w") as file:
     # Write the content of the variable to the file
-            #file.write(json.dumps(session['samlUserdata'], indent=4))
-            file.write(json.dumps(auth, indent=4))
+            file.write(json.dumps(session['samlUserdata'], indent=4))
+            #file.write(auth.get_attributes())
         #return redirect(url_for('index'))
         #return jsonify(user_data), 200
      # Convert user_data to a query string
