@@ -16,6 +16,25 @@ import logging
 app = Flask(__name__)
 
 
+
+
+
+
+
+from flask import Flask, request
+from storing_user_feedback import store_feedback  # Import the feedback function
+@app.route('/add_feedback', methods=['POST'])
+def add_feedback():
+    feedback_data = request.json  # Get feedback data from the request
+    return store_feedback(feedback_data)  # Call the feedback storage function
+
+
+
+
+
+
+
+
 # DeepL API key
 DEEPL_API_KEY = '82a64fae-73d4-4739-9935-bbf3cfc15010'
 
