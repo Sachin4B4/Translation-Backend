@@ -758,7 +758,7 @@ def check_api_key():
 
 
 # Route to retrieve all columns using admin_id from form data
-@app.route('/test_deepl_api', methods=['POST'])
+@app.route('/deepl_get/settings/deepl/get', methods=['POST'])
 def get_api():
     try:
         # Get admin_id from the form data
