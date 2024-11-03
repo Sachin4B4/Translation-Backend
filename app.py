@@ -177,7 +177,7 @@ def login_callback():
      # Convert user_data to a query string
         query_string = urllib.parse.urlencode(user_data)
         # Redirect to the React dashboard with user data
-        return redirect(f'https://jolly-sea-03e4a990f.5.azurestaticapps.net/dashboard?{query_string}')
+        return redirect(f'https://translationtest.allegisgroup.com/dashboard?{query_string}')
     else:
         return f"Error in SAML Authentication: {errors}", 500
     
